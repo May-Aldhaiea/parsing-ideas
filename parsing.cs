@@ -7,7 +7,8 @@ bool control;
 Queue buffer = new Queue();
 string acl;
     char x;
-    int code, id, channel, opcode, Value; // variables needed from the diagram
+    int code, id, channel, opcode; // variables needed from the diagram
+    double Value;
     bool no_escape, escape, escape_dot, reset_code, reset_code_digits, resource_id, resource_id_digits, temp_channel, // FSM state identifiers 
     temp_channel_digits, temp_opcode, temp_opcode_digits, temp_value, temp_value_digits, read_var_id, read_var_id_digits,
     write_var_id, write_var_id_digits, write_var_val, write_var_val_digits, start = true;
@@ -474,7 +475,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             write_var_val_digits = false;
-            write_variable(id,val);
+            write_variable(id,Value);
             return x;
         }
         if (x >= '0' && x <= '9')
@@ -517,7 +518,7 @@ char parse_control(char n)
         control = true;
         return n;
     }
-    else if (n == '^')
+    else if (n != '^')
     {
         control = false;
         buffer.Enqueue(n);
@@ -525,14 +526,13 @@ char parse_control(char n)
     }
 }
 
-int output_variable(int l) // l = id 
+void output_variable(int l) // l = id 
 {
     char temp[] = new char[];
     buffer.CopyTo(temp, 0);
     port.Write(temp[l], 0, 1);
-    return l;
 }
-void write_variable(int l, int k) // we create a temporary char array that will hold the previous queue and then refill it with the updated que with the changed values
+void write_variable(int l, double k) // we create a temporary char array that will hold the previous queue and then refill it with the updated que with the changed values
 {  // the l = id and k = val in this case
     char temp[] = new char[];
     buffer.CopyTo(temp, 0)
