@@ -3,82 +3,17 @@
 // 2. 
 
 
-////////// parsing function //////////////////
-class buffer_input
-{
-    private int[] ele;
-    private int front; // Beginning of the queue
-    private int rear;  // End of the queue
-    private int max;
-
-    public queue(int size)
-    {
-        ele = new int[size];
-        front = 0;
-        rear = -1;
-        max = size;
-    }
-
-    public void enqueue(char item)  // enqueue() --> insert an elelement to the queue
-    {
-        if (rear == max - 1)
-        {
-            Console.WriteLine("Queue Overflow");
-            return;
-        }
-        else
-        {
-            ele[++rear] == item
-        }
-    }
-
-    public char dequeue()  // dequeue() --> remove an element from the queue
-    {
-        if (front == rear + 1)
-        {
-            Console.WriteLine("Queue is Empty");
-            return -1;
-        }
-        else
-        {
-            Console.WriteLine(ele[front] + " dequeued from queue");
-            int p = ele[front++];
-            Console.WriteLine();
-            Console.WriteLine("Front item is {0}", ele[front]);
-            Console.WriteLine("Rear item is {0}", ele[rear]);
-            return p;
-        }
-    }
-
-    public void printQueue()  // mainly to test out the queue
-    {
-        if (front == rear + 1)
-        {
-            Console.WriteLine("Queue is Empty");
-            return;
-        }
-        else
-        {
-            for (int i = front; i <= rear, i++)
-            {
-                Console.WriteLine(ele[i] + " enqueued to queue");
-            }
-        }
-    }
-
-}
-
 bool control;
 Queue buffer = new Queue();
-int i = 0;
-char parse_escape(char N) // parse escape function
-{
-    string acl;
+string acl;
     char x;
     int code, id, channel, opcode, Value; // variables needed from the diagram
     bool no_escape, escape, escape_dot, reset_code, reset_code_digits, resource_id, resource_id_digits, temp_channel, // FSM state identifiers 
     temp_channel_digits, temp_opcode, temp_opcode_digits, temp_value, temp_value_digits, read_var_id, read_var_id_digits,
-    write_var_id, write_var_id_digits, write_var_val, write_var_val_digits, start;
+    write_var_id, write_var_id_digits, write_var_val, write_var_val_digits, start = true;
+int i = 0;
+char parse_escape(char N) // parse escape function
+{
 
 
     x = N;
@@ -95,7 +30,7 @@ char parse_escape(char N) // parse escape function
         {
             no_escape = true;
             start = true;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -111,7 +46,7 @@ char parse_escape(char N) // parse escape function
         {
             escape = false;
             start = true;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -120,7 +55,7 @@ char parse_escape(char N) // parse escape function
         if (x == 'E' - '0') // output 0 if there is an E
         {
             string send;
-            send = "0\n\r";
+            send = "0\r\n";
             port.Write(send);
             start = true;
             escape_dot = false;
@@ -129,7 +64,7 @@ char parse_escape(char N) // parse escape function
         else if (x == 'P' - '0' || x == 'Q' - '0') // output x0 if we have either P or Q
         {
             string send = new string;
-            send = "x0\n\r";
+            send = "x0\r\n";
             port.Write(send);
             start = true;
             escape_dot = false;
@@ -150,6 +85,7 @@ char parse_escape(char N) // parse escape function
             buffer.clear();
             start = true;
             escape_dot = false;
+            control = false;
             return x;
         }
         else if (x == 'I' - '0') //escape dot I statement
@@ -213,7 +149,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             reset_code = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -239,7 +175,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             reset_code_digits = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -258,7 +194,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             resource_id = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -282,7 +218,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             resource_id_digits = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -301,7 +237,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             temp_channel = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -323,7 +259,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             temp_channel_digits = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -342,7 +278,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             temp_opcode = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -364,7 +300,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             temp_opcode_digits = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -383,7 +319,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             temp_value = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -425,7 +361,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             temp_value_digits = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -444,7 +380,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             read_var_id = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -467,7 +403,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             read_var_id_digits = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -486,7 +422,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             write_var_id = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -508,7 +444,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             write_var_id_digits = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -527,7 +463,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             write_var_val = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
@@ -550,7 +486,7 @@ char parse_escape(char N) // parse escape function
         {
             start = true;
             write_var_val_digits = false;
-            parse_control(char N);
+            parse_control(N);
             return x;
         }
     }
