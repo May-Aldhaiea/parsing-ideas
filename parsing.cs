@@ -36,7 +36,7 @@ char parse_escape(char N) // parse escape function
     }
     if (escape == true) // escape statement
     {
-        if (x == '.' - '0')
+        if (x == '.')
         {
             escape_dot = true;
             escape = false;
@@ -52,7 +52,7 @@ char parse_escape(char N) // parse escape function
     }
     if (escape_dot == true) // escape_dot statement
     {
-        if (x == 'E' - '0') // output 0 if there is an E
+        if (x == 'E') // output 0 if there is an E
         {
             string send;
             send = "0\r\n";
@@ -61,7 +61,7 @@ char parse_escape(char N) // parse escape function
             escape_dot = false;
             return x;
         }
-        else if (x == 'P' - '0' || x == 'Q' - '0') // output x0 if we have either P or Q
+        else if (x == 'P' || x == 'Q') // output x0 if we have either P or Q
         {
             string send = new string;
             send = "x0\r\n";
@@ -70,7 +70,7 @@ char parse_escape(char N) // parse escape function
             escape_dot = false;
             return x;
         }
-        else if (x == 'B' - '0') //escape dot B statement
+        else if (x == 'B') //escape dot B statement
         {
             char send[];
             buffer.CopyTo(send, 0);
@@ -80,7 +80,7 @@ char parse_escape(char N) // parse escape function
             escape_dot = false;
             return x;
         }
-        else if (x == 'K' - '0') //escape dot K statement
+        else if (x == 'K') //escape dot K statement
         {
             buffer.clear();
             start = true;
@@ -88,7 +88,7 @@ char parse_escape(char N) // parse escape function
             control = false;
             return x;
         }
-        else if (x == 'I' - '0') //escape dot I statement
+        else if (x == 'I') //escape dot I statement
         {
             string send = new string;
             send = "x0,x0\n\r";
@@ -97,38 +97,38 @@ char parse_escape(char N) // parse escape function
             escape_dot = false;
             return x;
         }
-        else if (x == 'O' - '0') //escape dot O statement
+        else if (x == 'O') //escape dot O statement
         {
             //output extended status??
             escape_dot = false;
             start = true;
             return x;
         }
-        else if (x == '!' - '0') // Reset code enable statement
+        else if (x == '!') // Reset code enable statement
         {
             reset_code = true;
             escape_dot = false;
             return x;
         }
-        else if (x == 'S' - '0') // resource id enable statement
+        else if (x == 'S') // resource id enable statement
         {
             resource_id = true;
             escape_dot = false;
             return x;
         }
-        else if (x == 'T' - '0') // temp channel enable statement
+        else if (x == 'T') // temp channel enable statement
         {
             temp_channel = true;
             escape_dot = false;
             return x;
         }
-        else if (x == 'V' - '0') // read var id enable statement
+        else if (x == 'V') // read var id enable statement
         {
             read_var_id = true;
             escape_dot = false;
             return x;
         }
-        else if (x == 'W' - '0') // write var id enable statement
+        else if (x == 'W') // write var id enable statement
         {
             write_var_id = true;
             escape_dot = false;
@@ -156,11 +156,11 @@ char parse_escape(char N) // parse escape function
     }
     if (reset_code_digits == true)
     {
-        if (code == '5' - '0')
+        if (code == '5')
         {
             //halt_procedure() we are not exactly sure what to do here
         }
-        if (x == ':' - '0')
+        if (x == ':')
         {
             start = true;
             reset_code_digits = false;
@@ -201,7 +201,7 @@ char parse_escape(char N) // parse escape function
     }
     if (resource_id_digits == true)
     {
-        if (x == ':' - '0')
+        if (x == ':')
         {
             string send = "0\n\r";
             port.Write(send);
@@ -244,7 +244,7 @@ char parse_escape(char N) // parse escape function
     }
     if (temp_channel_digits == true)
     {
-        if (x == ';' - '0')
+        if (x == ';')
         {
             temp_opcode = true;
             temp_channel_digits = false;
@@ -285,7 +285,7 @@ char parse_escape(char N) // parse escape function
     }
     if (temp_opcode_digits == true)
     {
-        if (x == ';' - '0')
+        if (x == ':')
         {
             temp_value = true;
             temp_opcode_digits = false;
@@ -346,7 +346,7 @@ char parse_escape(char N) // parse escape function
             port.Write(send1);
             return x;
         }
-        if (x == ':' - '0')
+        if (x == ':')
         {
             start = true;
             temp_value_digits = false;
@@ -387,7 +387,7 @@ char parse_escape(char N) // parse escape function
     }
     if (read_var_id_digits == true)
     {
-        if (x == ':' - '0')
+        if (x == ':')
         {
             output_variable(id);
             read_var_id_digits = false;
@@ -429,7 +429,7 @@ char parse_escape(char N) // parse escape function
     }
     if (write_var_id_digits == true)
     {
-        if (x == ';' - '0')
+        if (x == ';')
         {
             write_var_val = true;
             write_var_id_digits = false;
@@ -470,11 +470,11 @@ char parse_escape(char N) // parse escape function
     }
     if (write_var_val_digits == true)
     {
-        if (x == ':' - '0')
+        if (x == ':')
         {
             start = true;
             write_var_val_digits = false;
-            //write variable into buffer id == location value == variable stored
+            write_variable(id,val);
             return x;
         }
         if (x >= '0' && x <= '9')
@@ -499,7 +499,7 @@ char parse_control(char n)
 {
     if (control == true)
     {
-        if (n == '^' - '0')
+        if (n == '^')
         {
             buffer.Enqueue(n);
             control = false;
@@ -512,7 +512,7 @@ char parse_control(char n)
             return n;
         }
     }
-    if (n == '^' - '0')
+    if (n == '^')
     {
         control = true;
         return n;
