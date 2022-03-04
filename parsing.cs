@@ -101,6 +101,7 @@ char parse_escape(char N) // parse escape function
         {
             //output extended status??
             escape_dot = false;
+            start = true;
             return x;
         }
         else if (x == '!' - '0') // Reset code enable statement
@@ -164,8 +165,8 @@ char parse_escape(char N) // parse escape function
             start = true;
             reset_code_digits = false;
             return x;
-        }
-        if (x >= '0' - '0' && x <= '9' - '0')
+        }   
+        if (x >= '0' && x <= '9')
         {
             code = code * 10;
             code = code + (int)x;
@@ -182,7 +183,7 @@ char parse_escape(char N) // parse escape function
     if (resource_id == true)
     {
         id = 0;
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             id = id * 10;
             id = id + (int)x;
@@ -208,7 +209,7 @@ char parse_escape(char N) // parse escape function
             start = true;
             return x;
         }
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             id = id * 10;
             id = id + (int)x;
@@ -225,7 +226,7 @@ char parse_escape(char N) // parse escape function
     if (temp_channel == true)
     {
         channel = 0;
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9' )
         {
             channel = channel * 10;
             channel = channel + (int)x;
@@ -249,7 +250,7 @@ char parse_escape(char N) // parse escape function
             temp_channel_digits = false;
             return x;
         }
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             channel = channel * 10;
             channel = channel + (int)x;
@@ -266,7 +267,7 @@ char parse_escape(char N) // parse escape function
     if (temp_opcode == true)
     {
         opcode = 0;
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             opcode = opcode * 10;
             opcode = opcode + (int)x;
@@ -290,7 +291,7 @@ char parse_escape(char N) // parse escape function
             temp_opcode_digits = false;
             return x;
         }
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             opcode = opcode * 10;
             opcode = opcode + (int)x;
@@ -307,7 +308,7 @@ char parse_escape(char N) // parse escape function
     if (temp_value == true)
     {
         Value = 0;
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             Value = Value * 10;
             Value = Value + (int)x;
@@ -351,7 +352,7 @@ char parse_escape(char N) // parse escape function
             temp_value_digits = false;
             return x;
         }
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             Value = Value * 10;
             Value = Value + (int)x;
@@ -368,7 +369,7 @@ char parse_escape(char N) // parse escape function
     if (read_var_id == true)
     {
         id = 0;
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             id = id * 10;
             id = id + (int)x;
@@ -393,7 +394,7 @@ char parse_escape(char N) // parse escape function
             start = true;
             return x;
         }
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             id = id * 10;
             id = id + (int)x;
@@ -410,7 +411,7 @@ char parse_escape(char N) // parse escape function
     if (write_var_id == true)
     {
         id = 0;
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             id = id * 10;
             id = id + (int)x;
@@ -434,7 +435,7 @@ char parse_escape(char N) // parse escape function
             write_var_id_digits = false;
             return x;
         }
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             id = id * 10;
             id = id + (int)x;
@@ -451,7 +452,7 @@ char parse_escape(char N) // parse escape function
     if (write_var_val == true)
     {
         Value = 0;
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             Value = Value * 10;
             Value = Value + (int)x;
@@ -476,7 +477,7 @@ char parse_escape(char N) // parse escape function
             //write variable into buffer id == location value == variable stored
             return x;
         }
-        if (x >= '0' - '0' && x <= '9' - '0')
+        if (x >= '0' && x <= '9')
         {
             Value = Value * 10;
             Value = Value + (int)x;
