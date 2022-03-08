@@ -5,6 +5,7 @@
 
 bool control;
 Queue buffer = new Queue();
+double varArray[1024];
 string acl;
     char x;
     int code, id, channel, opcode; // variables needed from the diagram
@@ -528,19 +529,12 @@ char parse_control(char n)
 
 void output_variable(int l) // l = id 
 {
-    char temp[] = new char[];
-    buffer.CopyTo(temp, 0);
-    port.Write(temp[l], 0, 1);
+    double temp = varArray[l];
+    port.Write($"{temp:F}\r\n");
 }
 void write_variable(int l, double k) // we create a temporary char array that will hold the previous queue and then refill it with the updated que with the changed values
 {  // the l = id and k = val in this case
-    char temp[] = new char[];
-    buffer.CopyTo(temp, 0)
-  temp[l] = (char)k;
-    foreach (char c in temp)
-    {
-        buffer.Enqueue(temp[i]);
-    }
+    varArray[l] = k;
 }
 
 
