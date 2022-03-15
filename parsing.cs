@@ -4,7 +4,7 @@
 
 
 bool control;
-Queue buffer = new Queue();
+ConcurrentQueue<> buffer = new ConcurrentQueue<>();
 double varArray[1024];
 string acl;
     char x;
@@ -158,7 +158,7 @@ char parse_escape(char N) // parse escape function
     }
     if (reset_code_digits == true)
     {
-        if (code == '5')
+        if (code == 5)
         {
             //halt_procedure() we are not exactly sure what to do here
         }
@@ -287,7 +287,7 @@ char parse_escape(char N) // parse escape function
     }
     if (temp_opcode_digits == true)
     {
-        if (x == ':')
+        if (x == ';')
         {
             temp_value = true;
             temp_opcode_digits = false;
@@ -332,20 +332,23 @@ char parse_escape(char N) // parse escape function
         {
             string send = "0.0\n\r";
             port.Write(send);
+            start = true;
             return x;
         }
         else if (opcode == 4 || opcode == 43)
         {
             string send = "0\n\r";
             port.Write(send);
+            start = true;
             return x;
         }
         else if (opcode == 42)
         {
-            string send = "LCO\n\r";
-            string send1 = "HCO\n\r";
+            string send = "LCO\r\n";
+            string send1 = "HCO\r\n";
             port.Write(send);
             port.Write(send1);
+            start = true;
             return x;
         }
         if (x == ':')
@@ -458,7 +461,7 @@ char parse_escape(char N) // parse escape function
         {
             Value = Value * 10;
             Value = Value + (int)(x- '0');
-            temp_value_digits = true;
+            write_var_val_digits = true;
             write_var_val = false;
             return x;
         }
@@ -472,7 +475,7 @@ char parse_escape(char N) // parse escape function
     }
     if (write_var_val_digits == true)
     {
-        if (x == ':')
+        if (x == ':' || x == ';')
         {
             start = true;
             write_var_val_digits = false;
@@ -551,7 +554,6 @@ void write_variable(int l, double k) // we create a temporary char array that wi
     Write(command[] = "1", 0, 1);
     while (ReadExisting() == 1)
         Thread.Sleep(1);
-}
 }
 
 ///////////////////////////////////////////////////////
