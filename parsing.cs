@@ -4,13 +4,13 @@
 
 
 bool control;
-ConcurrentQueue<> buffer = new ConcurrentQueue<>();
+ConcurrentQueue<char> buffer = new ConcurrentQueue<char>();
 double varArray[1024];
 string acl;
     char x;
     int code, id, channel, opcode; // variables needed from the diagram
     double Value;
-    bool no_escape, escape, escape_dot, reset_code, reset_code_digits, resource_id, resource_id_digits, temp_channel, // FSM state identifiers 
+    bool escape, escape_dot, reset_code, reset_code_digits, resource_id, resource_id_digits, temp_channel, // FSM state identifiers 
     temp_channel_digits, temp_opcode, temp_opcode_digits, temp_value, temp_value_digits, read_var_id, read_var_id_digits,
     write_var_id, write_var_id_digits, write_var_val, write_var_val_digits, start = true;
 int i = 0;
@@ -24,13 +24,11 @@ char parse_escape(char N) // parse escape function
         if (x == 27) // escape sequence checker
         {
             escape = true;
-            no_escape = false;
             start = false;
             return x; // ending any function with a return in order to not make one character go through multiple statements
         }
         else //purple arrow statement
         {
-            no_escape = true;
             start = true;
             parse_control(N);
             return x;
@@ -93,7 +91,7 @@ char parse_escape(char N) // parse escape function
         else if (x == 'I') //escape dot I statement
         {
             string send = new string;
-            send = "x0,x0\n\r";
+            send = "x0,x0\r\n";
             port.Write(send);
             start = true;
             escape_dot = false;
@@ -101,6 +99,7 @@ char parse_escape(char N) // parse escape function
         }
         else if (x == 'O') //escape dot O statement
         {
+            int number = 0;
             //output extended status??
             escape_dot = false;
             start = true;
@@ -158,14 +157,16 @@ char parse_escape(char N) // parse escape function
     }
     if (reset_code_digits == true)
     {
-        if (code == 5)
-        {
-            //halt_procedure() we are not exactly sure what to do here
-        }
         if (x == ':')
         {
             start = true;
             reset_code_digits = false;
+            if (code == 5)
+            {
+                start = true;
+                //halt_procedure() we are not exactly sure what to do here
+                return x;
+            }
             return x;
         }   
         if (x >= '0' && x <= '9')
@@ -205,7 +206,7 @@ char parse_escape(char N) // parse escape function
     {
         if (x == ':')
         {
-            string send = "0\n\r";
+            string send = "0\r\n";
             port.Write(send);
             resource_id_digits = false;
             start = true;
@@ -328,31 +329,25 @@ char parse_escape(char N) // parse escape function
     }
     if (temp_value_digits == true)
     {
-        if (opcode == 2)
-        {
-            string send = "0.0\n\r";
-            port.Write(send);
-            start = true;
-            return x;
-        }
-        else if (opcode == 4 || opcode == 43)
-        {
-            string send = "0\n\r";
-            port.Write(send);
-            start = true;
-            return x;
-        }
-        else if (opcode == 42)
-        {
-            string send = "LCO\r\n";
-            string send1 = "HCO\r\n";
-            port.Write(send);
-            port.Write(send1);
-            start = true;
-            return x;
-        }
         if (x == ':')
         {
+            if (opcode == 2)
+            {
+                string send = "0.0\r\n";
+                port.Write(send);
+            }
+            else if (opcode == 4 || opcode == 43)
+            {
+                string send = "0\r\n";
+                port.Write(send);
+            }
+            else if (opcode == 42)
+            {
+                string send = "LCO\r\n";
+                string send1 = "HCO\r\n";
+                port.Write(send);
+                port.Write(send1);
+            }
             start = true;
             temp_value_digits = false;
             return x;
@@ -532,12 +527,21 @@ char parse_control(char n)
 
 void output_variable(int l) // l = id 
 {
-    double temp = varArray[l];
-    port.Write($"{temp:F}\r\n");
+    if (l < 1024)
+    {
+        double temp = varArray[l];
+        port.Write($"{temp:F}\r\n");
+    } else
+    {
+        port.Write("0\r\n");
+    }
 }
 void write_variable(int l, double k) // we create a temporary char array that will hold the previous queue and then refill it with the updated que with the changed values
 {  // the l = id and k = val in this case
-    varArray[l] = k;
+    if(l < 1024)
+    {
+        varArray[l] = k;
+    }
 }
 
 
