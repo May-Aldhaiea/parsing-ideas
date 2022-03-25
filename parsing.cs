@@ -75,7 +75,9 @@ char parse_escape(char N) // parse escape function
             char send[];
             buffer.CopyTo(send, 0);
             int temp = send.length();
+            int maxSize = 65535  - temp;
             port.Write(send[], 0, temp);
+            port.Write(maxSize.ToString());
             start = true;
             escape_dot = false;
             return x;
@@ -100,7 +102,11 @@ char parse_escape(char N) // parse escape function
         else if (x == 'O') //escape dot O statement
         {
             int number = 0;
-            //output extended status??
+            if(buffer == null)
+            {
+                number += 8;
+            }
+            
             escape_dot = false;
             start = true;
             return x;
@@ -164,7 +170,7 @@ char parse_escape(char N) // parse escape function
             if (code == 5)
             {
                 start = true;
-                //halt_procedure() we are not exactly sure what to do here
+                halt_procedure();  //we are not exactly sure what to do here
                 return x;
             }
             return x;
@@ -559,5 +565,8 @@ void write_variable(int l, double k) // we create a temporary char array that wi
     while (ReadExisting() == 1)
         Thread.Sleep(1);
 }
-
+void halt_procedure()
+{
+    return;    
+}
 ///////////////////////////////////////////////////////
