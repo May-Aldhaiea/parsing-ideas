@@ -8,7 +8,7 @@ ConcurrentQueue<char> buffer = new ConcurrentQueue<char>();
 double varArray[1024];
 string acl;
     char x;
-    int code, id, channel, opcode; // variables needed from the diagram
+    int code, id, channel, opcode, maxSize = 65535; // variables needed from the diagram
     double Value;
     bool escape, escape_dot, reset_code, reset_code_digits, resource_id, resource_id_digits, temp_channel, // FSM state identifiers 
     temp_channel_digits, temp_opcode, temp_opcode_digits, temp_value, temp_value_digits, read_var_id, read_var_id_digits,
@@ -73,11 +73,15 @@ char parse_escape(char N) // parse escape function
         else if (x == 'B') //escape dot B statement
         {
             char send[];
-            buffer.CopyTo(send, 0);
-            int temp = send.length();
-            int maxSize = 65535  - temp;
+            if (!(buffer.IsEmpty())){
+                buffer.CopyTo(send, 0);
+            } else {
+                send = null;
+            }
+            int temp = buffer.count();
+            maxSize = maxSize - temp;
             port.Write(send[], 0, temp);
-            port.Write(maxSize.ToString());
+            port.Write($"{maxSize}\r\n");
             start = true;
             escape_dot = false;
             return x;
@@ -102,7 +106,7 @@ char parse_escape(char N) // parse escape function
         else if (x == 'O') //escape dot O statement
         {
             int number = 0;
-            if(buffer == null)
+            if(buffer.IsEmpty())
             {
                 number += 8;
             }
