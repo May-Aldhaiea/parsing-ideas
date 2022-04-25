@@ -7,24 +7,24 @@ char command_loop()
   char h;
   buffer.TryDequeue(out h);
   
-  if (buffer.IsEmpty)
+  /*if (buffer.IsEmpty)
   {
     B = BD = D = DO = DI = E = ED = I = II = IN = IO = O = OA = 
       OC = OD = OE = OF = OI = ON = OO = OP = OS = R = RA = S = 
       SA = T = TC = V = VC = VS = X = XD = false;
-  }
+  }*/
   if (D == true)
   {
-  		switch(h)
+  	switch(h)
       {
         case "I":
-        	port.Write{"0\r\n"}
+        	vantage.Write{"0\r\n"}
         	D = false;
-          DI = true;
+         	DI = true;
       		break;
         case "O":
-        	D = false;
-          DO = true;
+       		D = false;
+          	DO = true;
         	break;
       }
     return h;
@@ -45,7 +45,7 @@ char command_loop()
     switch(h)
     {
       case "I":
-    		port.Write{"0 x0\r\n"};
+    		vantage.Write{"0 x0\r\n"};
         I = false;
         break;
       case "N":
@@ -66,15 +66,15 @@ char command_loop()
     switch(h)
     {
       case "A":
-        port.Write{"0,0\r\n"};
+        vantage.Write{"0,0\r\n"};
         O = false;
         break;
       case "C":
-        port.Write{"0,0\r\n"};
+        vantage.Write{"0,0\r\n"};
         O = false;
         break;
       case "D":
-        port.Write{"0 x0\r\n"};
+        vantage.Write{"0 x0\r\n"};
         O = false;
         break;
       case "E":
@@ -82,25 +82,25 @@ char command_loop()
         O = false;
         break;
       case "F":
-        port.Write{"0,0\r\n"};
+        vantage.Write{"0,0\r\n"};
         O = false;
         break;
       case "I":
-        // Port handler outputing "CCX-BLD9999Teleporter"
-        port.Write{"CCX-BLD9999Teleporter\r\n"};
+        // vantage handler outputing "CCX-BLD9999Teleporter"
+        vantage.Write{"CCX-BLD9999Teleporter\r\n"};
         O = false;
         break;
       case "N":
-        port.Write{"0 x0\r\n"};
+        vantage.Write{"0 x0\r\n"};
         O = false;
         break;
       case "O": 
-        port.Write{"0,0\r\n"};
+        vantage.Write{"0,0\r\n"};
         O = false;
         break;
       case "P":
         // selector
-        port.Write{"0\r\n"};
+        vantage.Write{"0\r\n"};
         O = false;
         break;
       case "S";
@@ -201,14 +201,14 @@ char command_loop()
   {
     if (opcode == 2)
     {
-      port.Write{"0.0\r\n"};
+      vantage.Write{"0.0\r\n"};
     }else if (opcode == 42)
     {
-      port.Write{"LCO\r\n"};
-      port.Write{"HCO\r\n"};
+      vantage.Write{"LCO\r\n"};
+      vantage.Write{"HCO\r\n"};
     }else if (opcode == 4 || opcode == 43)
     {
-      port.Write{"0\r\n"};
+      vantage.Write{"0\r\n"};
     }
     TC = false;
     return h;
@@ -230,14 +230,14 @@ char command_loop()
      if (/* operation is omitted */)
      {
        SA = false;
-       port.Write{"0 x0\r\n"};
+       vantage.Write{"0 x0\r\n"};
      }
     return h;
   }
   if (RA == true)
   {
     // chan samples?
-    port.Write{"0\r\n"};
+    vantage.Write{"0\r\n"};
     RA = false;
     return h;
   }
@@ -246,7 +246,7 @@ char command_loop()
   {
     if(h == "-1")
     {
-      	port.Write{"0 x0\r\n"};
+      	vantage.Write{"0 x0\r\n"};
     }
     return h;
   }
@@ -255,18 +255,27 @@ char command_loop()
   if (DI == true)
   {
     // This command reads the status of the digital bit number specified
+	if (h == ';')
+	{
+		vantage.Write{"0\r\n"}
+		DI = false;
+	}
     return h;
   }
   if (DO == true)
   {
-    if (h == "1")
+    /*if (h == "1")
     {
       // outputs shadow registers to a host computer in decimal
-      port.Write{"0,0\r\n"}
+      vantage.Write{"0,0\r\n"}
       return h;
-    }
+    }*/
     // outputs shadow registers to a host in hexadecimal 
-    port.Write{"0,0\r\n"}
+    if (h == ';')
+	{
+		vantage.Write{"0,o\r\n"}
+		DO = false;
+	}
     return h;
   }
   switch(h)
