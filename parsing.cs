@@ -56,7 +56,7 @@ char parse_escape(char N) // parse escape function
         {
             string send;
             send = "0\r\n";
-            port.Write(send);
+            vantage.Write(send);
             start = true;
             escape_dot = false;
             return x;
@@ -65,7 +65,7 @@ char parse_escape(char N) // parse escape function
         {
             string send = new string;
             send = "x0\r\n";
-            port.Write(send);
+            vantage.Write(send);
             start = true;
             escape_dot = false;
             return x;
@@ -80,8 +80,8 @@ char parse_escape(char N) // parse escape function
             }
             int temp = buffer.count();
             maxSize = maxSize - temp;
-            port.Write(send[], 0, temp);
-            port.Write($"{maxSize}\r\n");
+            vantage.Write(send[], 0, temp);
+            vantage.Write($"{maxSize}\r\n");
             start = true;
             escape_dot = false;
             return x;
@@ -98,7 +98,7 @@ char parse_escape(char N) // parse escape function
         {
             string send = new string;
             send = "x0,x0\r\n";
-            port.Write(send);
+            vantage.Write(send);
             start = true;
             escape_dot = false;
             return x;
@@ -217,7 +217,7 @@ char parse_escape(char N) // parse escape function
         if (x == ':')
         {
             string send = "0\r\n";
-            port.Write(send);
+            vantage.Write(send);
             resource_id_digits = false;
             start = true;
             return x;
@@ -344,19 +344,19 @@ char parse_escape(char N) // parse escape function
             if (opcode == 2)
             {
                 string send = "0.0\r\n";
-                port.Write(send);
+                vantage.Write(send);
             }
             else if (opcode == 4 || opcode == 43)
             {
                 string send = "0\r\n";
-                port.Write(send);
+                vantage.Write(send);
             }
             else if (opcode == 42)
             {
                 string send = "LCO\r\n";
                 string send1 = "HCO\r\n";
-                port.Write(send);
-                port.Write(send1);
+                vantage.Write(send);
+                vantage.Write(send1);
             }
             start = true;
             temp_value_digits = false;
@@ -540,10 +540,10 @@ void output_variable(int l) // l = id
     if (l < 1024)
     {
         double temp = varArray[l];
-        port.Write($"{temp:F}\r\n");
+        vantage.Write($"{temp:F}\r\n");
     } else
     {
-        port.Write("0\r\n");
+        vantage.Write("0\r\n");
     }
 }
 void write_variable(int l, double k) // we create a temporary char array that will hold the previous queue and then refill it with the updated que with the changed values
