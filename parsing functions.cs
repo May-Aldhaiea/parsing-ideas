@@ -1,6 +1,6 @@
 char readChar;
 int ascii;
-bool escSequence = false, commandSequence = false;
+bool escSequence = false; //commandSequence = false;
 void fixString()
 {
   vantage.readTo(readVantage);
@@ -30,16 +30,16 @@ void fixString()
     if (escSequence == true)
     {
       parse_escape(readChar);
-    }else
+    }/*else
     {
       command_loop();
       commandSequence = true;
-    }
+    }*/
     if (start == true)
     {
       escSequence = false;
     }
-    if (commandSequence = true)
+    /*if (commandSequence = true)
     {
       command_loop();
     }
@@ -48,6 +48,6 @@ void fixString()
       SA = T = TC = V = VC = VS = X = XD = false)
     {
       commandSequence = false;
-    }
+    }*/
   }
 }
